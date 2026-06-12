@@ -9,38 +9,188 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RulesRouteImport } from './routes/rules'
+import { Route as PartnerRouteImport } from './routes/partner'
+import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as FaqRouteImport } from './routes/faq'
+import { Route as BlogRouteImport } from './routes/blog'
+import { Route as AboutUsRouteImport } from './routes/about-us'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TradingProgramsIndexRouteImport } from './routes/trading-programs.index'
+import { Route as TradingProgramsSizeRouteImport } from './routes/trading-programs.$size'
 
+const RulesRoute = RulesRouteImport.update({
+  id: '/rules',
+  path: '/rules',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnerRoute = PartnerRouteImport.update({
+  id: '/partner',
+  path: '/partner',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HowItWorksRoute = HowItWorksRouteImport.update({
+  id: '/how-it-works',
+  path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutUsRoute = AboutUsRouteImport.update({
+  id: '/about-us',
+  path: '/about-us',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TradingProgramsIndexRoute = TradingProgramsIndexRouteImport.update({
+  id: '/trading-programs/',
+  path: '/trading-programs/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TradingProgramsSizeRoute = TradingProgramsSizeRouteImport.update({
+  id: '/trading-programs/$size',
+  path: '/trading-programs/$size',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about-us': typeof AboutUsRoute
+  '/blog': typeof BlogRoute
+  '/faq': typeof FaqRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/partner': typeof PartnerRoute
+  '/rules': typeof RulesRoute
+  '/trading-programs/$size': typeof TradingProgramsSizeRoute
+  '/trading-programs/': typeof TradingProgramsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about-us': typeof AboutUsRoute
+  '/blog': typeof BlogRoute
+  '/faq': typeof FaqRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/partner': typeof PartnerRoute
+  '/rules': typeof RulesRoute
+  '/trading-programs/$size': typeof TradingProgramsSizeRoute
+  '/trading-programs': typeof TradingProgramsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about-us': typeof AboutUsRoute
+  '/blog': typeof BlogRoute
+  '/faq': typeof FaqRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/partner': typeof PartnerRoute
+  '/rules': typeof RulesRoute
+  '/trading-programs/$size': typeof TradingProgramsSizeRoute
+  '/trading-programs/': typeof TradingProgramsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about-us'
+    | '/blog'
+    | '/faq'
+    | '/how-it-works'
+    | '/partner'
+    | '/rules'
+    | '/trading-programs/$size'
+    | '/trading-programs/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about-us'
+    | '/blog'
+    | '/faq'
+    | '/how-it-works'
+    | '/partner'
+    | '/rules'
+    | '/trading-programs/$size'
+    | '/trading-programs'
+  id:
+    | '__root__'
+    | '/'
+    | '/about-us'
+    | '/blog'
+    | '/faq'
+    | '/how-it-works'
+    | '/partner'
+    | '/rules'
+    | '/trading-programs/$size'
+    | '/trading-programs/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutUsRoute: typeof AboutUsRoute
+  BlogRoute: typeof BlogRoute
+  FaqRoute: typeof FaqRoute
+  HowItWorksRoute: typeof HowItWorksRoute
+  PartnerRoute: typeof PartnerRoute
+  RulesRoute: typeof RulesRoute
+  TradingProgramsSizeRoute: typeof TradingProgramsSizeRoute
+  TradingProgramsIndexRoute: typeof TradingProgramsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/rules': {
+      id: '/rules'
+      path: '/rules'
+      fullPath: '/rules'
+      preLoaderRoute: typeof RulesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partner': {
+      id: '/partner'
+      path: '/partner'
+      fullPath: '/partner'
+      preLoaderRoute: typeof PartnerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/how-it-works': {
+      id: '/how-it-works'
+      path: '/how-it-works'
+      fullPath: '/how-it-works'
+      preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about-us': {
+      id: '/about-us'
+      path: '/about-us'
+      fullPath: '/about-us'
+      preLoaderRoute: typeof AboutUsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +198,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/trading-programs/': {
+      id: '/trading-programs/'
+      path: '/trading-programs'
+      fullPath: '/trading-programs/'
+      preLoaderRoute: typeof TradingProgramsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trading-programs/$size': {
+      id: '/trading-programs/$size'
+      path: '/trading-programs/$size'
+      fullPath: '/trading-programs/$size'
+      preLoaderRoute: typeof TradingProgramsSizeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutUsRoute: AboutUsRoute,
+  BlogRoute: BlogRoute,
+  FaqRoute: FaqRoute,
+  HowItWorksRoute: HowItWorksRoute,
+  PartnerRoute: PartnerRoute,
+  RulesRoute: RulesRoute,
+  TradingProgramsSizeRoute: TradingProgramsSizeRoute,
+  TradingProgramsIndexRoute: TradingProgramsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
