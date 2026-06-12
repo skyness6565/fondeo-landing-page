@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RulesRouteImport } from './routes/rules'
+import { Route as PartnerRouteImport } from './routes/partner'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as IndexRouteImport } from './routes/index'
@@ -19,6 +20,11 @@ import { Route as TradingProgramsSizeRouteImport } from './routes/trading-progra
 const RulesRoute = RulesRouteImport.update({
   id: '/rules',
   path: '/rules',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnerRoute = PartnerRouteImport.update({
+  id: '/partner',
+  path: '/partner',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HowItWorksRoute = HowItWorksRouteImport.update({
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/blog': typeof BlogRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/partner': typeof PartnerRoute
   '/rules': typeof RulesRoute
   '/trading-programs/$size': typeof TradingProgramsSizeRoute
   '/trading-programs/': typeof TradingProgramsIndexRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/blog': typeof BlogRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/partner': typeof PartnerRoute
   '/rules': typeof RulesRoute
   '/trading-programs/$size': typeof TradingProgramsSizeRoute
   '/trading-programs': typeof TradingProgramsIndexRoute
@@ -68,6 +76,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/blog': typeof BlogRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/partner': typeof PartnerRoute
   '/rules': typeof RulesRoute
   '/trading-programs/$size': typeof TradingProgramsSizeRoute
   '/trading-programs/': typeof TradingProgramsIndexRoute
@@ -78,6 +87,7 @@ export interface FileRouteTypes {
     | '/'
     | '/blog'
     | '/how-it-works'
+    | '/partner'
     | '/rules'
     | '/trading-programs/$size'
     | '/trading-programs/'
@@ -86,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/blog'
     | '/how-it-works'
+    | '/partner'
     | '/rules'
     | '/trading-programs/$size'
     | '/trading-programs'
@@ -94,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/blog'
     | '/how-it-works'
+    | '/partner'
     | '/rules'
     | '/trading-programs/$size'
     | '/trading-programs/'
@@ -103,6 +115,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BlogRoute: typeof BlogRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  PartnerRoute: typeof PartnerRoute
   RulesRoute: typeof RulesRoute
   TradingProgramsSizeRoute: typeof TradingProgramsSizeRoute
   TradingProgramsIndexRoute: typeof TradingProgramsIndexRoute
@@ -115,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/rules'
       fullPath: '/rules'
       preLoaderRoute: typeof RulesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partner': {
+      id: '/partner'
+      path: '/partner'
+      fullPath: '/partner'
+      preLoaderRoute: typeof PartnerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/how-it-works': {
@@ -159,6 +179,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BlogRoute: BlogRoute,
   HowItWorksRoute: HowItWorksRoute,
+  PartnerRoute: PartnerRoute,
   RulesRoute: RulesRoute,
   TradingProgramsSizeRoute: TradingProgramsSizeRoute,
   TradingProgramsIndexRoute: TradingProgramsIndexRoute,
