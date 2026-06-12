@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as RulesRouteImport } from './routes/rules'
 import { Route as PartnerRouteImport } from './routes/partner'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AboutUsRouteImport } from './routes/about-us'
 import { Route as IndexRouteImport } from './routes/index'
@@ -31,6 +32,11 @@ const PartnerRoute = PartnerRouteImport.update({
 const HowItWorksRoute = HowItWorksRouteImport.update({
   id: '/how-it-works',
   path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogRoute = BlogRouteImport.update({
@@ -63,6 +69,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about-us': typeof AboutUsRoute
   '/blog': typeof BlogRoute
+  '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
   '/partner': typeof PartnerRoute
   '/rules': typeof RulesRoute
@@ -73,6 +80,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about-us': typeof AboutUsRoute
   '/blog': typeof BlogRoute
+  '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
   '/partner': typeof PartnerRoute
   '/rules': typeof RulesRoute
@@ -84,6 +92,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about-us': typeof AboutUsRoute
   '/blog': typeof BlogRoute
+  '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
   '/partner': typeof PartnerRoute
   '/rules': typeof RulesRoute
@@ -96,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about-us'
     | '/blog'
+    | '/faq'
     | '/how-it-works'
     | '/partner'
     | '/rules'
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about-us'
     | '/blog'
+    | '/faq'
     | '/how-it-works'
     | '/partner'
     | '/rules'
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about-us'
     | '/blog'
+    | '/faq'
     | '/how-it-works'
     | '/partner'
     | '/rules'
@@ -127,6 +139,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutUsRoute: typeof AboutUsRoute
   BlogRoute: typeof BlogRoute
+  FaqRoute: typeof FaqRoute
   HowItWorksRoute: typeof HowItWorksRoute
   PartnerRoute: typeof PartnerRoute
   RulesRoute: typeof RulesRoute
@@ -155,6 +168,13 @@ declare module '@tanstack/react-router' {
       path: '/how-it-works'
       fullPath: '/how-it-works'
       preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog': {
@@ -199,6 +219,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutUsRoute: AboutUsRoute,
   BlogRoute: BlogRoute,
+  FaqRoute: FaqRoute,
   HowItWorksRoute: HowItWorksRoute,
   PartnerRoute: PartnerRoute,
   RulesRoute: RulesRoute,
