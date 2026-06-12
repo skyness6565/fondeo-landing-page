@@ -9,11 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RulesRouteImport } from './routes/rules'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TradingProgramsIndexRouteImport } from './routes/trading-programs.index'
 import { Route as TradingProgramsSizeRouteImport } from './routes/trading-programs.$size'
 
+const RulesRoute = RulesRouteImport.update({
+  id: '/rules',
+  path: '/rules',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HowItWorksRoute = HowItWorksRouteImport.update({
   id: '/how-it-works',
   path: '/how-it-works',
@@ -38,12 +44,14 @@ const TradingProgramsSizeRoute = TradingProgramsSizeRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/rules': typeof RulesRoute
   '/trading-programs/$size': typeof TradingProgramsSizeRoute
   '/trading-programs/': typeof TradingProgramsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/rules': typeof RulesRoute
   '/trading-programs/$size': typeof TradingProgramsSizeRoute
   '/trading-programs': typeof TradingProgramsIndexRoute
 }
@@ -51,6 +59,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/rules': typeof RulesRoute
   '/trading-programs/$size': typeof TradingProgramsSizeRoute
   '/trading-programs/': typeof TradingProgramsIndexRoute
 }
@@ -59,14 +68,21 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/how-it-works'
+    | '/rules'
     | '/trading-programs/$size'
     | '/trading-programs/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/how-it-works' | '/trading-programs/$size' | '/trading-programs'
+  to:
+    | '/'
+    | '/how-it-works'
+    | '/rules'
+    | '/trading-programs/$size'
+    | '/trading-programs'
   id:
     | '__root__'
     | '/'
     | '/how-it-works'
+    | '/rules'
     | '/trading-programs/$size'
     | '/trading-programs/'
   fileRoutesById: FileRoutesById
@@ -74,12 +90,20 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  RulesRoute: typeof RulesRoute
   TradingProgramsSizeRoute: typeof TradingProgramsSizeRoute
   TradingProgramsIndexRoute: typeof TradingProgramsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/rules': {
+      id: '/rules'
+      path: '/rules'
+      fullPath: '/rules'
+      preLoaderRoute: typeof RulesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/how-it-works': {
       id: '/how-it-works'
       path: '/how-it-works'
@@ -114,6 +138,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   HowItWorksRoute: HowItWorksRoute,
+  RulesRoute: RulesRoute,
   TradingProgramsSizeRoute: TradingProgramsSizeRoute,
   TradingProgramsIndexRoute: TradingProgramsIndexRoute,
 }
