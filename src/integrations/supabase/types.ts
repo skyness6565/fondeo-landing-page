@@ -14,16 +14,230 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      accounts: {
+        Row: {
+          balance: number
+          total_invested: number
+          total_roi: number
+          total_withdrawn: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          total_invested?: number
+          total_roi?: number
+          total_withdrawn?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          total_invested?: number
+          total_roi?: number
+          total_withdrawn?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      investment_plans: {
+        Row: {
+          created_at: string
+          daily_roi_percent: number
+          duration_days: number
+          id: string
+          max_amount: number
+          min_amount: number
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          daily_roi_percent: number
+          duration_days: number
+          id?: string
+          max_amount: number
+          min_amount: number
+          name: string
+        }
+        Update: {
+          created_at?: string
+          daily_roi_percent?: number
+          duration_days?: number
+          id?: string
+          max_amount?: number
+          min_amount?: number
+          name?: string
+        }
+        Relationships: []
+      }
+      investments: {
+        Row: {
+          amount: number
+          created_at: string
+          daily_roi_percent: number
+          duration_days: number
+          end_date: string
+          id: string
+          plan_id: string | null
+          plan_name: string
+          start_date: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          daily_roi_percent: number
+          duration_days: number
+          end_date: string
+          id?: string
+          plan_id?: string | null
+          plan_name: string
+          start_date?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          daily_roi_percent?: number
+          duration_days?: number
+          end_date?: string
+          id?: string
+          plan_id?: string | null
+          plan_name?: string
+          start_date?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investments_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "investment_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          note: string | null
+          status: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          note?: string | null
+          status?: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          note?: string | null
+          status?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      withdrawals: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          status: string
+          user_id: string
+          wallet_address: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          status?: string
+          user_id: string
+          wallet_address: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          status?: string
+          user_id?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +364,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
