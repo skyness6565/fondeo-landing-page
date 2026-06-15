@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { Menu, X, TrendingUp } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Menu, X, TrendingUp, LayoutDashboard } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import type { User } from "@supabase/supabase-js";
 
 const LINKS = [
   { to: "/how-it-works", label: "How It Works" },
@@ -14,6 +16,12 @@ const LINKS = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => setUser(s?.user ?? null));
+    supabase.auth.getSession().then(({ data: { session } }) => setUser(session?.user ?? null));
+    return () => subscription.unsubscribe();
+  }, []);
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
@@ -36,12 +44,26 @@ export function Header() {
           ))}
         </nav>
         <div className="hidden items-center gap-2 lg:flex">
-          <Link
-            to="/trading-programs"
-            className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-transform hover:-translate-y-0.5"
-          >
-            Get Funded
-          </Link>
+          {user ? (
+            <Link
+              to="/dashboard"
+              className="inline-flex items-center gap-1.5 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-transform hover:-translate-y-0.5"
+            >
+              <LayoutDashboard className="h-4 w-4" /> Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link to="/auth" className="rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
+                Sign in
+              </Link>
+              <Link
+                to="/auth"
+                className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-transform hover:-translate-y-0.5"
+              >
+                Register
+              </Link>
+            </>
+          )}
         </div>
         <button
           aria-label="Toggle menu"
@@ -66,11 +88,11 @@ export function Header() {
               </Link>
             ))}
             <Link
-              to="/trading-programs"
+              to={user ? "/dashboard" : "/auth"}
               onClick={() => setOpen(false)}
               className="mt-2 rounded-md bg-primary px-4 py-2 text-center text-sm font-semibold text-primary-foreground"
             >
-              Get Funded
+              {user ? "Dashboard" : "Sign in / Register"}
             </Link>
           </div>
         </div>
