@@ -164,9 +164,12 @@ function InvestPage() {
         ))}
       </div>
 
-      {selectedPlan && (
+      {selectedPlan && !showWallet && (
         <div className="rounded-xl border border-border bg-card p-5">
           <h3 className="font-semibold">Invest in {selectedPlan.name}</h3>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Enter amount between {fmt(Number(selectedPlan.min_amount))} and {fmt(Number(selectedPlan.max_amount))}.
+          </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <input
               type="number"
@@ -176,8 +179,30 @@ function InvestPage() {
               min={selectedPlan.min_amount}
               max={selectedPlan.max_amount}
             />
-            <button disabled={busy} onClick={handleInvest} className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-60">
-              Confirm Investment
+            <button onClick={handleInvest} className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
+              Continue
+            </button>
+          </div>
+        </div>
+      )}
+
+      {selectedPlan && showWallet && (
+        <div className="rounded-xl border border-primary/40 bg-card p-6 text-center">
+          <h3 className="font-display text-xl font-bold">Connect your wallet to fund this investment</h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            You're investing <span className="font-semibold text-foreground">{fmt(Number(amount))}</span> in {selectedPlan.name}.
+            Connect your crypto wallet to send the deposit.
+          </p>
+          <div className="mt-5 flex justify-center gap-2">
+            <button
+              disabled={busy}
+              onClick={handleConnectWallet}
+              className="rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] disabled:opacity-60"
+            >
+              {busy ? "Opening wallet…" : "Connect Wallet"}
+            </button>
+            <button onClick={() => setShowWallet(false)} className="rounded-md border border-border px-4 py-3 text-sm">
+              Back
             </button>
           </div>
         </div>
