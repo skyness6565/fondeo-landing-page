@@ -271,7 +271,7 @@ function InvestmentsTab({ qc }: { qc: ReturnType<typeof useQueryClient> }) {
   });
 
   async function update(id: string, patch: Record<string, unknown>) {
-    const { error } = await supabase.from("investments").update(patch).eq("id", id);
+    const { error } = await supabase.from("investments").update(patch as never).eq("id", id);
     if (error) return toast.error(error.message);
     toast.success("Updated");
     qc.invalidateQueries({ queryKey: ["admin", "investments"] });
