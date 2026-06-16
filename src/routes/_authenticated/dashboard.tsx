@@ -84,22 +84,46 @@ function DashboardPage() {
             <h2 className="font-semibold">Active Investments</h2>
             <Link to="/invest" className="text-xs text-primary hover:underline">View all <ArrowUpRight className="inline h-3 w-3" /></Link>
           </div>
-          <div className="mt-4 space-y-2">
+          <div className="mt-4 space-y-3">
             {(investments?.length ?? 0) === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">No investments yet</p>
-            ) : investments!.map((inv) => (
-              <div key={inv.id} className="flex items-center justify-between rounded-lg border border-border/60 p-3 text-sm">
-                <div>
-                  <div className="font-medium">{inv.plan_name}</div>
-                  <div className="text-xs text-muted-foreground">{inv.daily_roi_percent}% daily · {inv.duration_days}d</div>
+            ) : investments!.map((inv) => {
+              const amt = Number(inv.amount);
+              const roi = Number(inv.daily_roi_percent);
+              const days = Number(inv.duration_days);
+              const target = amt * roi * days / 100;
+              const startMs = new Date(inv.created_at).getTime();
+              const elapsedDays = Math.max(0, (Date.now() - startMs) / 86400000);
+              const progress = inv.status === "completed" ? 1 : Math.min(1, elapsedDays / Math.max(days, 1));
+              const earned = target * progress;
+              return (
+                <div key={inv.id} className="rounded-lg border border-border/60 p-3 text-sm">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-medium">{inv.plan_name}</div>
+                      <div className="text-xs text-muted-foreground">{roi}% daily · {days}d · {fmt(amt)}</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-semibold text-green-400">{fmt(earned)}</div>
+                      <div className="text-xs text-muted-foreground">of {fmt(target)}</div>
+                    </div>
+                  </div>
+                  <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-muted">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-primary to-green-400 transition-all duration-700"
+                      style={{ width: `${(progress * 100).toFixed(2)}%` }}
+                    />
+                  </div>
+                  <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
+                    <span>$0</span>
+                    <span>{(progress * 100).toFixed(1)}% · day {Math.min(days, Math.floor(elapsedDays))}/{days}</span>
+                    <span>{fmt(target)}</span>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <div className="font-semibold">{fmt(Number(inv.amount))}</div>
-                  <div className="text-xs text-green-400 capitalize">{inv.status}</div>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
+
         </section>
 
         <section className="rounded-xl border border-border bg-card p-5">
