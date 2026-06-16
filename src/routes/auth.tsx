@@ -11,10 +11,12 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-const schema = z.object({
+const loginSchema = z.object({
   email: z.string().trim().email().max(255),
   password: z.string().min(6).max(72),
-  full_name: z.string().trim().min(2).max(80).optional(),
+});
+const registerSchema = loginSchema.extend({
+  full_name: z.string().trim().min(2).max(80),
 });
 
 function AuthPage() {
@@ -32,7 +34,7 @@ function AuthPage() {
     e.preventDefault();
     setBusy(true);
     try {
-      const parsed = schema.safeParse(form);
+      const parsed = (mode === "register" ? registerSchema : loginSchema).safeParse(form);
       if (!parsed.success) {
         toast.error(parsed.error.issues[0].message);
         return;
