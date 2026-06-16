@@ -20,17 +20,17 @@ const fmt = (n: number) =>
 
 function AdminPage() {
   const qc = useQueryClient();
-  const [tab, setTab] = useState<"users" | "plans" | "investments">("users");
+  const [tab, setTab] = useState<"users" | "plans" | "investments" | "withdrawals">("withdrawals");
 
   return (
     <div className="space-y-6">
       <header>
         <h1 className="font-display text-2xl font-bold">Admin Panel</h1>
-        <p className="text-sm text-muted-foreground">Manage users, balances, ROI rates, and active investments.</p>
+        <p className="text-sm text-muted-foreground">Manage users, balances, ROI rates, investments, and withdrawals.</p>
       </header>
 
       <div className="flex gap-2 border-b border-border">
-        {(["users", "plans", "investments"] as const).map((t) => (
+        {(["users", "plans", "investments", "withdrawals"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
@@ -46,6 +46,98 @@ function AdminPage() {
       {tab === "users" && <UsersTab qc={qc} />}
       {tab === "plans" && <PlansTab qc={qc} />}
       {tab === "investments" && <InvestmentsTab qc={qc} />}
+      {tab === "withdrawals" && <WithdrawalsTab qc={qc} />}
+    </div>
+  );
+}
+
+function WithdrawalsTab({ qc }: { qc: ReturnType<typeof useQueryClient> }) {
+  const { data } = useQuery({
+    queryKey: ["admin", "withdrawals"],
+    queryFn: async () =>
+      (await supabase.from("withdrawals").select("*").order("created_at", { ascending: false })).data || [],
+  });
+
+  async function approve(w: { id: string; user_id: string; amount: number | string }) {
+    const { error } = await supabase.from("withdrawals").update({ status: "completed" }).eq("id", w.id);
+    if (error) return toast.error(error.message);
+    await supabase.from("transactions").insert({
+      user_id: w.user_id, type: "withdrawal", amount: Number(w.amount),
+      status: "completed", note: "Approved by admin",
+    });
+    toast.success("Withdrawal approved");
+    qc.invalidateQueries({ queryKey: ["admin", "withdrawals"] });
+  }
+
+  async function reject(w: { id: string; user_id: string; amount: number | string; status: string }) {
+    if (w.status !== "pending") {
+      const { error } = await supabase.from("withdrawals").update({ status: "rejected" }).eq("id", w.id);
+      if (error) return toast.error(error.message);
+      qc.invalidateQueries({ queryKey: ["admin", "withdrawals"] });
+      return;
+    }
+    // Refund the held balance
+    const { data: acct } = await supabase.from("accounts").select("*").eq("user_id", w.user_id).maybeSingle();
+    if (acct) {
+      const amt = Number(w.amount);
+      await supabase.from("accounts").update({
+        balance: Number(acct.balance) + amt,
+        total_withdrawn: Math.max(0, Number(acct.total_withdrawn) - amt),
+        updated_at: new Date().toISOString(),
+      }).eq("user_id", w.user_id);
+    }
+    const { error } = await supabase.from("withdrawals").update({ status: "rejected" }).eq("id", w.id);
+    if (error) return toast.error(error.message);
+    await supabase.from("transactions").insert({
+      user_id: w.user_id, type: "adjustment", amount: Number(w.amount),
+      status: "completed", note: "Withdrawal rejected — refund",
+    });
+    toast.success("Rejected and refunded");
+    qc.invalidateQueries({ queryKey: ["admin", "withdrawals"] });
+  }
+
+  return (
+    <div className="overflow-x-auto rounded-xl border border-border bg-card">
+      <table className="w-full text-sm">
+        <thead className="border-b border-border bg-muted/30 text-left text-xs uppercase text-muted-foreground">
+          <tr>
+            <th className="p-3">Date</th>
+            <th className="p-3">User</th>
+            <th className="p-3">Amount</th>
+            <th className="p-3">Wallet</th>
+            <th className="p-3">Status</th>
+            <th className="p-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {(data?.length ?? 0) === 0 && (
+            <tr><td colSpan={6} className="p-6 text-center text-muted-foreground">No withdrawal requests</td></tr>
+          )}
+          {data?.map((w) => (
+            <tr key={w.id} className="border-b border-border/50">
+              <td className="p-3 text-xs text-muted-foreground">{new Date(w.created_at).toLocaleString()}</td>
+              <td className="p-3 text-xs text-muted-foreground">{w.user_id.slice(0, 8)}…</td>
+              <td className="p-3 font-semibold">{fmt(Number(w.amount))}</td>
+              <td className="p-3 truncate font-mono text-xs max-w-[220px]">{w.wallet_address}</td>
+              <td className="p-3">
+                <span className={`rounded-full px-2 py-0.5 text-xs capitalize ${w.status === "completed" ? "bg-green-500/10 text-green-400" : w.status === "rejected" ? "bg-red-500/10 text-red-400" : "bg-amber-500/10 text-amber-400"}`}>
+                  {w.status}
+                </span>
+              </td>
+              <td className="p-3">
+                {w.status === "pending" ? (
+                  <div className="flex gap-1.5">
+                    <button onClick={() => approve(w)} className="rounded-md bg-green-600 px-2 py-1 text-xs font-semibold text-white">Approve</button>
+                    <button onClick={() => reject(w)} className="rounded-md bg-red-600 px-2 py-1 text-xs font-semibold text-white">Reject</button>
+                  </div>
+                ) : (
+                  <span className="text-xs text-muted-foreground">—</span>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
