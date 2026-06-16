@@ -177,7 +177,7 @@ function PlansTab({ qc }: { qc: ReturnType<typeof useQueryClient> }) {
   const [newPlan, setNewPlan] = useState({ name: "", daily_roi_percent: "", duration_days: "", min_amount: "", max_amount: "" });
 
   async function updatePlan(id: string, field: string, value: number) {
-    const { error } = await supabase.from("investment_plans").update({ [field]: value }).eq("id", id);
+    const { error } = await supabase.from("investment_plans").update({ [field]: value } as never).eq("id", id);
     if (error) return toast.error(error.message);
     toast.success("Plan updated");
     qc.invalidateQueries({ queryKey: ["admin", "plans"] });
