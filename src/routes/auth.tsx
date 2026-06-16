@@ -34,7 +34,7 @@ function AuthPage() {
     e.preventDefault();
     setBusy(true);
     try {
-      const parsed = schema.safeParse(form);
+      const parsed = (mode === "register" ? registerSchema : loginSchema).safeParse(form);
       if (!parsed.success) {
         toast.error(parsed.error.issues[0].message);
         return;
