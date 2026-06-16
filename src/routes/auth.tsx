@@ -11,10 +11,12 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-const schema = z.object({
+const loginSchema = z.object({
   email: z.string().trim().email().max(255),
   password: z.string().min(6).max(72),
-  full_name: z.string().trim().min(2).max(80).optional(),
+});
+const registerSchema = loginSchema.extend({
+  full_name: z.string().trim().min(2).max(80),
 });
 
 function AuthPage() {
