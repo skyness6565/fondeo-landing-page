@@ -31,6 +31,19 @@ function DashboardLayout() {
   const { user } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
+  const { data: isAdmin } = useQuery({
+    queryKey: ["is-admin", user?.id],
+    enabled: !!user?.id,
+    queryFn: async () => {
+      const { data } = await supabase.rpc("has_role", { _user_id: user!.id, _role: "admin" });
+      return !!data;
+    },
+  });
+
+  const NAV = isAdmin
+    ? [...BASE_NAV, { to: "/admin" as const, label: "Admin", icon: Shield }]
+    : BASE_NAV;
+
   async function handleSignOut() {
     await supabase.auth.signOut();
     router.navigate({ to: "/auth", replace: true });
