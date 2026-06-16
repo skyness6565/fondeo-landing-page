@@ -24,6 +24,7 @@ import { Route as AuthenticatedWithdrawRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedTransactionsRouteImport } from './routes/_authenticated/transactions'
 import { Route as AuthenticatedInvestRouteImport } from './routes/_authenticated/invest'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 
 const RulesRoute = RulesRouteImport.update({
@@ -101,6 +102,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
   id: '/account',
   path: '/account',
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/partner': typeof PartnerRoute
   '/rules': typeof RulesRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/invest': typeof AuthenticatedInvestRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
@@ -134,6 +141,7 @@ export interface FileRoutesByTo {
   '/partner': typeof PartnerRoute
   '/rules': typeof RulesRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/invest': typeof AuthenticatedInvestRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
@@ -153,6 +161,7 @@ export interface FileRoutesById {
   '/partner': typeof PartnerRoute
   '/rules': typeof RulesRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/invest': typeof AuthenticatedInvestRoute
   '/_authenticated/transactions': typeof AuthenticatedTransactionsRoute
@@ -172,6 +181,7 @@ export interface FileRouteTypes {
     | '/partner'
     | '/rules'
     | '/account'
+    | '/admin'
     | '/dashboard'
     | '/invest'
     | '/transactions'
@@ -189,6 +199,7 @@ export interface FileRouteTypes {
     | '/partner'
     | '/rules'
     | '/account'
+    | '/admin'
     | '/dashboard'
     | '/invest'
     | '/transactions'
@@ -207,6 +218,7 @@ export interface FileRouteTypes {
     | '/partner'
     | '/rules'
     | '/_authenticated/account'
+    | '/_authenticated/admin'
     | '/_authenticated/dashboard'
     | '/_authenticated/invest'
     | '/_authenticated/transactions'
@@ -336,6 +348,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/account': {
       id: '/_authenticated/account'
       path: '/account'
@@ -348,6 +367,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedInvestRoute: typeof AuthenticatedInvestRoute
   AuthenticatedTransactionsRoute: typeof AuthenticatedTransactionsRoute
@@ -356,6 +376,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAccountRoute: AuthenticatedAccountRoute,
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedInvestRoute: AuthenticatedInvestRoute,
   AuthenticatedTransactionsRoute: AuthenticatedTransactionsRoute,
@@ -381,13 +402,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

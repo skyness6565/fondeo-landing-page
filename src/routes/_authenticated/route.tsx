@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, redirect, Link, useRouter, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, TrendingUp, ArrowDownToLine, Receipt, LogOut, User as UserIcon } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { LayoutDashboard, TrendingUp, ArrowDownToLine, Receipt, LogOut, User as UserIcon, Shield } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
 
@@ -17,7 +18,7 @@ export const Route = createFileRoute("/_authenticated")({
   ),
 });
 
-const NAV = [
+const BASE_NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/invest", label: "Invest", icon: TrendingUp },
   { to: "/withdraw", label: "Withdraw", icon: ArrowDownToLine },
@@ -29,6 +30,19 @@ function DashboardLayout() {
   const router = useRouter();
   const { user } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  const { data: isAdmin } = useQuery({
+    queryKey: ["is-admin", user?.id],
+    enabled: !!user?.id,
+    queryFn: async () => {
+      const { data } = await supabase.rpc("has_role", { _user_id: user!.id, _role: "admin" });
+      return !!data;
+    },
+  });
+
+  const NAV = isAdmin
+    ? [...BASE_NAV, { to: "/admin" as const, label: "Admin", icon: Shield }]
+    : BASE_NAV;
 
   async function handleSignOut() {
     await supabase.auth.signOut();

