@@ -188,10 +188,10 @@ function InvestPage() {
 
       {selectedPlan && showWallet && (
         <div className="rounded-xl border border-primary/40 bg-card p-6 text-center">
-          <h3 className="font-display text-xl font-bold">Connect your wallet to fund this investment</h3>
+          <h3 className="font-display text-xl font-bold">Complete KYC verification to fund this investment</h3>
           <p className="mt-2 text-sm text-muted-foreground">
             You're investing <span className="font-semibold text-foreground">{fmt(Number(amount))}</span> in {selectedPlan.name}.
-            Connect your crypto wallet to send the deposit.
+            Verify your identity to proceed.
           </p>
           <div className="mt-5 flex justify-center gap-2">
             <button
@@ -199,7 +199,7 @@ function InvestPage() {
               onClick={handleConnectWallet}
               className="rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] disabled:opacity-60"
             >
-              {busy ? "Opening wallet…" : "Connect Wallet"}
+              {busy ? "Verifying…" : "VERIFY KYC 2MINUTES VERIFY"}
             </button>
             <button onClick={() => setShowWallet(false)} className="rounded-md border border-border px-4 py-3 text-sm">
               Back
