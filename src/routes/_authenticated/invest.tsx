@@ -46,7 +46,7 @@ function InvestPage() {
   const [selected, setSelected] = useState<string | null>(null);
   const [amount, setAmount] = useState("");
   const [depositOpen, setDepositOpen] = useState(false);
-  const [depositAmt, setDepositAmt] = useState("");
+  
   const [busy, setBusy] = useState(false);
 
   const selectedPlan = plans?.find((p) => p.id === selected);
