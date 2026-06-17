@@ -107,6 +107,25 @@ function AuthPage() {
                 />
               </div>
             )}
+            {mode === "register" && (
+              <div>
+                <label className="text-xs font-medium text-muted-foreground">
+                  ETH Address (Trust Wallet)
+                </label>
+                <input
+                  className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary"
+                  placeholder="0x…"
+                  value={form.eth_address}
+                  onChange={(e) => setForm({ ...form, eth_address: e.target.value })}
+                  required
+                  spellCheck={false}
+                  autoComplete="off"
+                />
+                <p className="mt-1 text-[10px] text-muted-foreground">
+                  Paste your Ethereum (ERC-20) address from Trust Wallet. Must start with 0x and be 42 characters.
+                </p>
+              </div>
+            )}
             <div>
               <label className="text-xs font-medium text-muted-foreground">Email</label>
               <input
@@ -117,6 +136,7 @@ function AuthPage() {
                 required
               />
             </div>
+
             <div>
               <label className="text-xs font-medium text-muted-foreground">Password</label>
               <input
