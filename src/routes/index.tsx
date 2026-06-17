@@ -207,18 +207,21 @@ function Home() {
               ))}
             </ul>
           </div>
-          <div className="rounded-2xl border border-border/60 bg-card/40 p-8">
-            <div className="text-sm text-muted-foreground">Example payout</div>
-            <div className="mt-2 font-display text-4xl font-bold">$8,000</div>
-            <div className="text-xs text-muted-foreground">on a $100,000 account at 10% gain</div>
-            <div className="mt-6 h-3 overflow-hidden rounded-full bg-muted">
-              <div className="flex h-full">
-                <div className="h-full bg-primary" style={{ width: "80%" }} />
+          <div className="overflow-hidden rounded-2xl border border-border/60 bg-card/40">
+            <img src={profitImg} alt="Trading performance chart" loading="lazy" width={1024} height={768} className="h-48 w-full object-cover" />
+            <div className="p-8">
+              <div className="text-sm text-muted-foreground">Example payout</div>
+              <div className="mt-2 font-display text-4xl font-bold">$8,000</div>
+              <div className="text-xs text-muted-foreground">on a $100,000 account at 10% gain</div>
+              <div className="mt-6 h-3 overflow-hidden rounded-full bg-muted">
+                <div className="flex h-full">
+                  <div className="h-full bg-primary" style={{ width: "80%" }} />
+                </div>
               </div>
-            </div>
-            <div className="mt-2 flex justify-between text-xs">
-              <span className="text-primary">Trader 80%</span>
-              <span className="text-muted-foreground">Firm 20%</span>
+              <div className="mt-2 flex justify-between text-xs">
+                <span className="text-primary">Trader 80%</span>
+                <span className="text-muted-foreground">Firm 20%</span>
+              </div>
             </div>
           </div>
         </div>
