@@ -45,12 +45,39 @@ function DashboardPage() {
     },
   });
 
+  // Live tick for real-time accruals
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  // Compute accrued (unrealized) profit from active investments, second-by-second
+  const liveAccrued = useMemo(() => {
+    if (!investments) return 0;
+    return investments.reduce((sum, inv) => {
+      if (inv.status !== "active") return sum;
+      const amt = Number(inv.amount);
+      const roi = Number(inv.daily_roi_percent);
+      const days = Number(inv.duration_days);
+      const target = (amt * roi * days) / 100;
+      const totalSec = days * 86400;
+      const elapsedSec = Math.max(0, (now - new Date(inv.created_at).getTime()) / 1000);
+      const earned = Math.min(target, (target * elapsedSec) / totalSec);
+      return sum + earned;
+    }, 0);
+  }, [investments, now]);
+
+  const liveBalance = Number(account?.balance ?? 0) + liveAccrued;
+  const liveRoi = Number(account?.total_roi ?? 0) + liveAccrued;
+
   const stats = [
-    { label: "Available Balance", value: fmt(Number(account?.balance ?? 0)), icon: Wallet, color: "text-primary" },
+    { label: "Available Balance", value: fmtPrecise(liveBalance), icon: Wallet, color: "text-primary" },
     { label: "Total Invested", value: fmt(Number(account?.total_invested ?? 0)), icon: TrendingUp, color: "text-blue-400" },
-    { label: "Total ROI Earned", value: fmt(Number(account?.total_roi ?? 0)), icon: Activity, color: "text-green-400" },
+    { label: "Total ROI Earned", value: fmtPrecise(liveRoi), icon: Activity, color: "text-green-400" },
     { label: "Total Withdrawn", value: fmt(Number(account?.total_withdrawn ?? 0)), icon: ArrowDownToLine, color: "text-orange-400" },
   ];
+
 
   return (
     <div className="space-y-6">
