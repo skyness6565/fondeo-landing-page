@@ -93,6 +93,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
     ],
+    scripts: [
+      {
+        src: "//code.jivosite.com/widget/e8tTGaxiWC",
+        async: true,
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
