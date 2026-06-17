@@ -71,7 +71,7 @@ function DashboardLayout() {
           </div>
         </div>
       </header>
-      <div className="mx-auto flex max-w-7xl gap-6 px-3 py-4 sm:px-4 sm:py-6">
+      <div className="mx-auto flex max-w-7xl gap-6 px-3 pb-[calc(5rem+env(safe-area-inset-bottom))] pt-4 sm:px-4 sm:py-6 lg:pb-6">
         <aside className="hidden w-56 shrink-0 lg:block">
           <nav className="sticky top-20 space-y-1">
             {NAV.map((n) => {
@@ -90,24 +90,37 @@ function DashboardLayout() {
           </nav>
         </aside>
         <main className="min-w-0 flex-1">
-          <nav className="mb-4 -mx-3 flex gap-1 overflow-x-auto px-3 pb-1 lg:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {NAV.map((n) => {
-              const active = pathname === n.to;
-              return (
-                <Link
-                  key={n.to}
-                  to={n.to}
-                  className={`flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md px-3 py-2 text-xs ${active ? "bg-primary text-primary-foreground" : "border border-border text-muted-foreground"}`}
-                >
-                  <n.icon className="h-3.5 w-3.5" />
-                  {n.label}
-                </Link>
-              );
-            })}
-          </nav>
           <Outlet />
         </main>
       </div>
+
+      {/* Mobile bottom tab bar (portrait + landscape) */}
+      <nav
+        aria-label="Primary"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 backdrop-blur-xl pb-[env(safe-area-inset-bottom)] lg:hidden"
+      >
+        <ul
+          className="mx-auto grid max-w-7xl"
+          style={{ gridTemplateColumns: `repeat(${NAV.length}, minmax(0, 1fr))` }}
+        >
+          {NAV.map((n) => {
+            const active = pathname === n.to;
+            return (
+              <li key={n.to} className="contents">
+                <Link
+                  to={n.to}
+                  aria-label={n.label}
+                  aria-current={active ? "page" : undefined}
+                  className={`flex min-h-[56px] flex-col items-center justify-center gap-0.5 px-1 py-2 text-[10px] font-medium transition-colors ${active ? "text-primary" : "text-muted-foreground active:bg-muted"}`}
+                >
+                  <n.icon className={`h-5 w-5 ${active ? "scale-110" : ""} transition-transform`} />
+                  <span className="max-w-full truncate leading-tight">{n.label}</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
     </div>
   );
 }
