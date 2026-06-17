@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Menu, X, TrendingUp, LayoutDashboard } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
