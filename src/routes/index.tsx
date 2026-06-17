@@ -50,7 +50,7 @@ function Home() {
     <PageShell>
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border/60" style={{ background: "var(--gradient-hero)" }}>
-        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-20 md:grid-cols-2 md:py-28 md:items-center">
+        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:gap-10 sm:py-20 md:grid-cols-2 md:py-28 md:items-center">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
               <Zap className="h-3 w-3" /> Funded trading evaluations
