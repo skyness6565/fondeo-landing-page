@@ -261,8 +261,9 @@ function Home() {
             { n: "Tomás G.", img: tomasImg, c: "Spain", a: "$200,000", p: "$16,900", q: "Three cycles in, scaled to $200K. The bi-weekly payouts let me reinvest into my own setup." },
           ].map((t) => (
             <div key={t.n} className="rounded-xl border border-border/60 bg-card/40 p-6">
-              <div className="flex items-center justify-between">
-                <div>
+              <div className="flex items-center gap-4">
+                <img src={t.img} alt={t.n} loading="lazy" width={64} height={64} className="h-14 w-14 rounded-full object-cover ring-2 ring-primary/30" />
+                <div className="min-w-0 flex-1">
                   <div className="font-semibold">{t.n}</div>
                   <div className="text-xs text-muted-foreground">{t.c}</div>
                 </div>
