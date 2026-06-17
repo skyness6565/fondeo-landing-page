@@ -121,29 +121,6 @@ function InvestPage() {
     }
   }
 
-
-  async function handleDeposit() {
-    if (!uid) return;
-    const amt = Number(depositAmt);
-    if (!amt || amt <= 0) return toast.error("Enter a valid amount");
-    setBusy(true);
-    try {
-      await supabase.from("transactions").insert({ user_id: uid, type: "deposit", amount: amt, note: "Wallet deposit" });
-      await supabase.from("accounts").update({
-        balance: Number(account?.balance ?? 0) + amt,
-        updated_at: new Date().toISOString(),
-      }).eq("user_id", uid);
-      toast.success("Deposit credited");
-      setDepositAmt("");
-      setDepositOpen(false);
-      qc.invalidateQueries();
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Deposit failed");
-    } finally {
-      setBusy(false);
-    }
-  }
-
   return (
     <div className="space-y-6">
       <header className="flex flex-wrap items-end justify-between gap-3">
@@ -153,8 +130,8 @@ function InvestPage() {
         </div>
         <div className="rounded-lg border border-border bg-card px-4 py-2 text-sm">
           Balance: <span className="font-semibold">{fmt(Number(account?.balance ?? 0))}</span>
-          <button onClick={() => setDepositOpen(true)} className="ml-3 rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
-            + Deposit
+          <button onClick={() => setDepositOpen((o) => !o)} className="ml-3 rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
+            {depositOpen ? "Hide" : "Deposit"}
           </button>
         </div>
       </header>
@@ -162,19 +139,25 @@ function InvestPage() {
       {depositOpen && (
         <div className="rounded-xl border border-primary/40 bg-card p-5">
           <h3 className="font-semibold">Deposit funds</h3>
-          <p className="mt-1 text-xs text-muted-foreground">Funds are credited to your account balance.</p>
-          <div className="mt-3 flex gap-2">
-            <input
-              type="number"
-              placeholder="Amount in USD"
-              value={depositAmt}
-              onChange={(e) => setDepositAmt(e.target.value)}
-              className="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
-            />
-            <button disabled={busy} onClick={handleDeposit} className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-60">
-              Deposit
-            </button>
-            <button onClick={() => setDepositOpen(false)} className="rounded-md border border-border px-3 py-2 text-sm">Cancel</button>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Send your deposit to one of the wallet addresses below. Once received, an administrator will credit your account balance. Direct deposits are disabled.
+          </p>
+          <div className="mt-4 space-y-3">
+            {DEPOSIT_WALLETS.map((w) => (
+              <div key={w.label} className="rounded-lg border border-border bg-background p-3">
+                <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{w.label}</div>
+                <div className="mt-1 flex items-center gap-2">
+                  <code className="flex-1 break-all text-xs">{w.address}</code>
+                  <button
+                    onClick={() => copy(w.address)}
+                    className="rounded-md border border-border p-1.5 hover:bg-muted"
+                    aria-label={`Copy ${w.label} address`}
+                  >
+                    {copied === w.address ? <Check className="h-3.5 w-3.5 text-primary" /> : <Copy className="h-3.5 w-3.5" />}
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
