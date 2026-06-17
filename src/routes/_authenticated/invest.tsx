@@ -52,6 +52,15 @@ function InvestPage() {
   const selectedPlan = plans?.find((p) => p.id === selected);
 
   const [showWallet, setShowWallet] = useState(false);
+  const [copied, setCopied] = useState<string | null>(null);
+
+  function copy(addr: string) {
+    navigator.clipboard.writeText(addr).then(() => {
+      setCopied(addr);
+      toast.success("Address copied");
+      setTimeout(() => setCopied(null), 1500);
+    });
+  }
 
   function handleInvest() {
     if (!uid || !selectedPlan) return;
