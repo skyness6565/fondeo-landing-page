@@ -108,6 +108,34 @@ function DashboardPage() {
         ))}
       </div>
 
+      <div className="rounded-xl border border-primary/30 bg-gradient-to-br from-primary/10 via-card to-card p-5">
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-primary" />
+          <h2 className="text-sm font-semibold">Your portfolio is growing</h2>
+        </div>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Profits accrue every second — keep your plan running to maximise compounding returns.
+        </p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { icon: ShieldCheck, title: "Funds secured", desc: "On-chain custody via Trust Wallet partnership." },
+            { icon: Zap, title: "Real-time payouts", desc: "Earnings update live, every second." },
+            { icon: Globe2, title: "Global community", desc: "Investors from 80+ countries on Fondeo." },
+            { icon: TrendingUp, title: "Consistent ROI", desc: "Daily yields paid out across every active plan." },
+          ].map((h) => (
+            <div key={h.title} className="flex items-start gap-3 rounded-lg border border-border/60 bg-background/40 p-3">
+              <h.icon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+              <div>
+                <div className="text-xs font-semibold">{h.title}</div>
+                <div className="text-[11px] text-muted-foreground">{h.desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+
+
       <div className="grid gap-6 lg:grid-cols-2">
         <section className="rounded-xl border border-border bg-card p-5">
           <div className="flex items-center justify-between">
