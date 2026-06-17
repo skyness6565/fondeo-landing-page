@@ -75,36 +75,49 @@ export function Header() {
           )}
         </div>
         <button
-          aria-label="Toggle menu"
-          className="grid h-9 w-9 place-items-center rounded-md border border-border lg:hidden"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          aria-controls="mobile-menu"
+          className="grid h-11 w-11 place-items-center rounded-md border border-border lg:hidden"
           onClick={() => setOpen((v) => !v)}
         >
-          {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
       {open && (
-        <div className="border-t border-border/60 bg-background lg:hidden">
-          <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-3">
-            {LINKS.map((l) => (
+        <>
+          <button
+            aria-label="Close menu overlay"
+            tabIndex={-1}
+            onClick={() => setOpen(false)}
+            className="fixed inset-0 top-16 z-40 bg-background/40 backdrop-blur-sm lg:hidden"
+          />
+          <div
+            id="mobile-menu"
+            className="fixed inset-x-0 top-16 z-50 max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-border/60 bg-background pb-[env(safe-area-inset-bottom)] lg:hidden"
+          >
+            <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-3">
+              {LINKS.map((l) => (
+                <Link
+                  key={l.to}
+                  to={l.to}
+                  onClick={() => setOpen(false)}
+                  className="flex min-h-11 items-center rounded-md px-3 py-2.5 text-base text-muted-foreground hover:bg-muted hover:text-foreground"
+                  activeProps={{ className: "text-foreground bg-muted" }}
+                >
+                  {l.label}
+                </Link>
+              ))}
               <Link
-                key={l.to}
-                to={l.to}
+                to={user ? "/dashboard" : "/auth"}
                 onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
-                activeProps={{ className: "text-foreground bg-muted" }}
+                className="mt-2 flex min-h-11 items-center justify-center rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground"
               >
-                {l.label}
+                {user ? "Dashboard" : "Sign in / Register"}
               </Link>
-            ))}
-            <Link
-              to={user ? "/dashboard" : "/auth"}
-              onClick={() => setOpen(false)}
-              className="mt-2 rounded-md bg-primary px-4 py-2 text-center text-sm font-semibold text-primary-foreground"
-            >
-              {user ? "Dashboard" : "Sign in / Register"}
-            </Link>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </header>
   );
