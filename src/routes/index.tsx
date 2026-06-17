@@ -5,6 +5,16 @@ import {
   CheckCircle2, Star, BarChart3, Wallet, HeadphonesIcon, Quote,
 } from "lucide-react";
 import { PageShell } from "@/components/site/PageShell";
+import danielImg from "@/assets/people/daniel.jpg";
+import meiImg from "@/assets/people/mei.jpg";
+import tomasImg from "@/assets/people/tomas.jpg";
+import alexImg from "@/assets/people/alex.jpg";
+import priyaImg from "@/assets/people/priya.jpg";
+import marcoImg from "@/assets/people/marco.jpg";
+import linaImg from "@/assets/people/lina.jpg";
+import hassanImg from "@/assets/people/hassan.jpg";
+import yukiImg from "@/assets/people/yuki.jpg";
+import profitImg from "@/assets/profit-sharing.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -197,18 +207,21 @@ function Home() {
               ))}
             </ul>
           </div>
-          <div className="rounded-2xl border border-border/60 bg-card/40 p-8">
-            <div className="text-sm text-muted-foreground">Example payout</div>
-            <div className="mt-2 font-display text-4xl font-bold">$8,000</div>
-            <div className="text-xs text-muted-foreground">on a $100,000 account at 10% gain</div>
-            <div className="mt-6 h-3 overflow-hidden rounded-full bg-muted">
-              <div className="flex h-full">
-                <div className="h-full bg-primary" style={{ width: "80%" }} />
+          <div className="overflow-hidden rounded-2xl border border-border/60 bg-card/40">
+            <img src={profitImg} alt="Trading performance chart" loading="lazy" width={1024} height={768} className="h-48 w-full object-cover" />
+            <div className="p-8">
+              <div className="text-sm text-muted-foreground">Example payout</div>
+              <div className="mt-2 font-display text-4xl font-bold">$8,000</div>
+              <div className="text-xs text-muted-foreground">on a $100,000 account at 10% gain</div>
+              <div className="mt-6 h-3 overflow-hidden rounded-full bg-muted">
+                <div className="flex h-full">
+                  <div className="h-full bg-primary" style={{ width: "80%" }} />
+                </div>
               </div>
-            </div>
-            <div className="mt-2 flex justify-between text-xs">
-              <span className="text-primary">Trader 80%</span>
-              <span className="text-muted-foreground">Firm 20%</span>
+              <div className="mt-2 flex justify-between text-xs">
+                <span className="text-primary">Trader 80%</span>
+                <span className="text-muted-foreground">Firm 20%</span>
+              </div>
             </div>
           </div>
         </div>
@@ -243,13 +256,14 @@ function Home() {
         </div>
         <div className="mt-12 grid gap-5 md:grid-cols-3">
           {[
-            { n: "Daniel R.", c: "Argentina", a: "$100,000", p: "$8,420", q: "Passed the two-step in 18 days. The rules are strict but fair — that's exactly what disciplined traders need." },
-            { n: "Mei L.", c: "Singapore", a: "$50,000", p: "$4,180", q: "I run a scalping strategy on ETH. The 24/7 support team answered my payout question within 10 minutes." },
-            { n: "Tomás G.", c: "Spain", a: "$200,000", p: "$16,900", q: "Three cycles in, scaled to $200K. The bi-weekly payouts let me reinvest into my own setup." },
+            { n: "Daniel R.", img: danielImg, c: "Argentina", a: "$100,000", p: "$8,420", q: "Passed the two-step in 18 days. The rules are strict but fair — that's exactly what disciplined traders need." },
+            { n: "Mei L.", img: meiImg, c: "Singapore", a: "$50,000", p: "$4,180", q: "I run a scalping strategy on ETH. The 24/7 support team answered my payout question within 10 minutes." },
+            { n: "Tomás G.", img: tomasImg, c: "Spain", a: "$200,000", p: "$16,900", q: "Three cycles in, scaled to $200K. The bi-weekly payouts let me reinvest into my own setup." },
           ].map((t) => (
             <div key={t.n} className="rounded-xl border border-border/60 bg-card/40 p-6">
-              <div className="flex items-center justify-between">
-                <div>
+              <div className="flex items-center gap-4">
+                <img src={t.img} alt={t.n} loading="lazy" width={64} height={64} className="h-14 w-14 rounded-full object-cover ring-2 ring-primary/30" />
+                <div className="min-w-0 flex-1">
                   <div className="font-semibold">{t.n}</div>
                   <div className="text-xs text-muted-foreground">{t.c}</div>
                 </div>
@@ -276,22 +290,25 @@ function Home() {
           </div>
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {[
-              { n: "Alex K.", r: "Day trader", q: "The evaluation criteria are clear from day one. No moving goalposts." },
-              { n: "Priya S.", r: "Swing trader", q: "I appreciate that they say 'simulated' everywhere. No misleading marketing." },
-              { n: "Marco T.", r: "Algo developer", q: "Fast execution on the demo terminal. Backtesting matched live behavior closely." },
-              { n: "Lina O.", r: "Crypto trader", q: "Withdrew in USDT in under 12 hours. Bookmarked for life." },
-              { n: "Hassan B.", r: "Position trader", q: "The drawdown rules forced me to size properly — improved my own trading too." },
-              { n: "Yuki M.", r: "Scalper", q: "Built for serious people. The dashboard is clean and the rules are sensible." },
+              { n: "Alex K.", img: alexImg, r: "Day trader", q: "The evaluation criteria are clear from day one. No moving goalposts." },
+              { n: "Priya S.", img: priyaImg, r: "Swing trader", q: "I appreciate that they say 'simulated' everywhere. No misleading marketing." },
+              { n: "Marco T.", img: marcoImg, r: "Algo developer", q: "Fast execution on the demo terminal. Backtesting matched live behavior closely." },
+              { n: "Lina O.", img: linaImg, r: "Crypto trader", q: "Withdrew in USDT in under 12 hours. Bookmarked for life." },
+              { n: "Hassan B.", img: hassanImg, r: "Position trader", q: "The drawdown rules forced me to size properly — improved my own trading too." },
+              { n: "Yuki M.", img: yukiImg, r: "Scalper", q: "Built for serious people. The dashboard is clean and the rules are sensible." },
             ].map((t) => (
               <div key={t.n} className="rounded-xl border border-border/60 bg-background p-6">
                 <Quote className="h-5 w-5 text-primary" />
                 <p className="mt-3 text-sm text-muted-foreground">"{t.q}"</p>
-                <div className="mt-4 flex items-center justify-between">
-                  <div>
-                    <div className="text-sm font-semibold">{t.n}</div>
-                    <div className="text-xs text-muted-foreground">{t.r}</div>
+                <div className="mt-4 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <img src={t.img} alt={t.n} loading="lazy" width={40} height={40} className="h-10 w-10 rounded-full object-cover ring-2 ring-primary/30" />
+                    <div className="min-w-0">
+                      <div className="text-sm font-semibold truncate">{t.n}</div>
+                      <div className="text-xs text-muted-foreground truncate">{t.r}</div>
+                    </div>
                   </div>
-                  <div className="flex">
+                  <div className="flex shrink-0">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <Star key={i} className="h-3 w-3 fill-primary text-primary" />
                     ))}
@@ -314,7 +331,7 @@ function Home() {
                 rules and payouts.
               </p>
               <div className="mt-6 space-y-2 text-sm">
-                <div>📧 support@fondeo.example</div>
+                <div>📧 supportfondeo1help@gmail.com</div>
                 <div>💬 Live chat on every page</div>
                 <div>🕒 Average response: under 5 minutes</div>
               </div>
