@@ -290,22 +290,25 @@ function Home() {
           </div>
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {[
-              { n: "Alex K.", r: "Day trader", q: "The evaluation criteria are clear from day one. No moving goalposts." },
-              { n: "Priya S.", r: "Swing trader", q: "I appreciate that they say 'simulated' everywhere. No misleading marketing." },
-              { n: "Marco T.", r: "Algo developer", q: "Fast execution on the demo terminal. Backtesting matched live behavior closely." },
-              { n: "Lina O.", r: "Crypto trader", q: "Withdrew in USDT in under 12 hours. Bookmarked for life." },
-              { n: "Hassan B.", r: "Position trader", q: "The drawdown rules forced me to size properly — improved my own trading too." },
-              { n: "Yuki M.", r: "Scalper", q: "Built for serious people. The dashboard is clean and the rules are sensible." },
+              { n: "Alex K.", img: alexImg, r: "Day trader", q: "The evaluation criteria are clear from day one. No moving goalposts." },
+              { n: "Priya S.", img: priyaImg, r: "Swing trader", q: "I appreciate that they say 'simulated' everywhere. No misleading marketing." },
+              { n: "Marco T.", img: marcoImg, r: "Algo developer", q: "Fast execution on the demo terminal. Backtesting matched live behavior closely." },
+              { n: "Lina O.", img: linaImg, r: "Crypto trader", q: "Withdrew in USDT in under 12 hours. Bookmarked for life." },
+              { n: "Hassan B.", img: hassanImg, r: "Position trader", q: "The drawdown rules forced me to size properly — improved my own trading too." },
+              { n: "Yuki M.", img: yukiImg, r: "Scalper", q: "Built for serious people. The dashboard is clean and the rules are sensible." },
             ].map((t) => (
               <div key={t.n} className="rounded-xl border border-border/60 bg-background p-6">
                 <Quote className="h-5 w-5 text-primary" />
                 <p className="mt-3 text-sm text-muted-foreground">"{t.q}"</p>
-                <div className="mt-4 flex items-center justify-between">
-                  <div>
-                    <div className="text-sm font-semibold">{t.n}</div>
-                    <div className="text-xs text-muted-foreground">{t.r}</div>
+                <div className="mt-4 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <img src={t.img} alt={t.n} loading="lazy" width={40} height={40} className="h-10 w-10 rounded-full object-cover ring-2 ring-primary/30" />
+                    <div className="min-w-0">
+                      <div className="text-sm font-semibold truncate">{t.n}</div>
+                      <div className="text-xs text-muted-foreground truncate">{t.r}</div>
+                    </div>
                   </div>
-                  <div className="flex">
+                  <div className="flex shrink-0">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <Star key={i} className="h-3 w-3 fill-primary text-primary" />
                     ))}
