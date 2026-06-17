@@ -256,9 +256,9 @@ function Home() {
         </div>
         <div className="mt-12 grid gap-5 md:grid-cols-3">
           {[
-            { n: "Daniel R.", c: "Argentina", a: "$100,000", p: "$8,420", q: "Passed the two-step in 18 days. The rules are strict but fair — that's exactly what disciplined traders need." },
-            { n: "Mei L.", c: "Singapore", a: "$50,000", p: "$4,180", q: "I run a scalping strategy on ETH. The 24/7 support team answered my payout question within 10 minutes." },
-            { n: "Tomás G.", c: "Spain", a: "$200,000", p: "$16,900", q: "Three cycles in, scaled to $200K. The bi-weekly payouts let me reinvest into my own setup." },
+            { n: "Daniel R.", img: danielImg, c: "Argentina", a: "$100,000", p: "$8,420", q: "Passed the two-step in 18 days. The rules are strict but fair — that's exactly what disciplined traders need." },
+            { n: "Mei L.", img: meiImg, c: "Singapore", a: "$50,000", p: "$4,180", q: "I run a scalping strategy on ETH. The 24/7 support team answered my payout question within 10 minutes." },
+            { n: "Tomás G.", img: tomasImg, c: "Spain", a: "$200,000", p: "$16,900", q: "Three cycles in, scaled to $200K. The bi-weekly payouts let me reinvest into my own setup." },
           ].map((t) => (
             <div key={t.n} className="rounded-xl border border-border/60 bg-card/40 p-6">
               <div className="flex items-center justify-between">
