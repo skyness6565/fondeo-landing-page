@@ -136,6 +136,24 @@ function InvestPage() {
         </div>
       </header>
 
+      <div className="flex flex-wrap items-center gap-3 rounded-xl border border-primary/30 bg-gradient-to-r from-primary/10 via-card to-card p-4">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#3375BB] text-white shadow-md">
+          <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6" aria-hidden>
+            <path d="M12 2L4 5v6c0 5 3.5 9.3 8 11 4.5-1.7 8-6 8-11V5l-8-3z" fill="currentColor" />
+          </svg>
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="text-sm font-semibold">Official partner of Trust Wallet</div>
+          <p className="text-xs text-muted-foreground">
+            Secure on-chain settlement. Connect your Trust Wallet to fund and receive payouts directly to your verified ETH address.
+          </p>
+        </div>
+        <span className="rounded-full bg-primary/15 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-primary">
+          Verified Partner
+        </span>
+      </div>
+
+
       {depositOpen && (
         <div className="rounded-xl border border-primary/40 bg-card p-5">
           <h3 className="font-semibold">Deposit funds</h3>
