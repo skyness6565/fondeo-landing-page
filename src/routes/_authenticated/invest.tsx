@@ -2,9 +2,17 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, Copy, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+
+const DEPOSIT_WALLETS: { label: string; address: string }[] = [
+  { label: "BTC", address: "bc1qvtj85erhw8cv0e6nzffn3wehcyt5skhjz2nz5h" },
+  { label: "ETH", address: "0xe9522f4a372567c58bf5af9d28e82fe2529a7434" },
+  { label: "USDT (TRC20 / Tron)", address: "TSZTKqrTB2zvHNvnfq7vnbcnm37x11uuRP" },
+  { label: "USDT (ERC20)", address: "0xe9522f4a372567c58bf5af9d28e82fe2529a7434" },
+  { label: "USDT (BEP20)", address: "0xe9522f4a372567c58bf5af9d28e82fe2529a7434" },
+];
 
 export const Route = createFileRoute("/_authenticated/invest")({
   head: () => ({ meta: [{ title: "Invest — Fondeo" }] }),
