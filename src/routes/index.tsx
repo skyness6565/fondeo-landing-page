@@ -331,7 +331,7 @@ function Home() {
                 rules and payouts.
               </p>
               <div className="mt-6 space-y-2 text-sm">
-                <div>📧 support@fondeo.example</div>
+                <div>📧 supportfondeo1help@gmail.com</div>
                 <div>💬 Live chat on every page</div>
                 <div>🕒 Average response: under 5 minutes</div>
               </div>
