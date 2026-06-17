@@ -5,6 +5,16 @@ import {
   CheckCircle2, Star, BarChart3, Wallet, HeadphonesIcon, Quote,
 } from "lucide-react";
 import { PageShell } from "@/components/site/PageShell";
+import danielImg from "@/assets/people/daniel.jpg";
+import meiImg from "@/assets/people/mei.jpg";
+import tomasImg from "@/assets/people/tomas.jpg";
+import alexImg from "@/assets/people/alex.jpg";
+import priyaImg from "@/assets/people/priya.jpg";
+import marcoImg from "@/assets/people/marco.jpg";
+import linaImg from "@/assets/people/lina.jpg";
+import hassanImg from "@/assets/people/hassan.jpg";
+import yukiImg from "@/assets/people/yuki.jpg";
+import profitImg from "@/assets/profit-sharing.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
