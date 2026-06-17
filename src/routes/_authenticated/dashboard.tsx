@@ -251,12 +251,12 @@ function InvestmentRow({ inv, now }: { inv: Investment; now: number }) {
           style={{ width: `${(progress * 100).toFixed(4)}%` }}
         />
       </div>
-      <div className="mt-1.5 grid grid-cols-3 gap-2 text-[10px] text-muted-foreground tabular-nums">
+      <div className="mt-1.5 grid grid-cols-1 gap-1 text-[10px] text-muted-foreground tabular-nums sm:grid-cols-3 sm:gap-2">
         <span>Elapsed: <span className="text-foreground">{elapsedDays}d {hh}:{mm}:{ss}</span> / {days}d</span>
-        <span className="text-center">Progress: <span className="text-foreground">{(progress * 100).toFixed(4)}%</span></span>
-        <span className="text-right">Rate: <span className="text-foreground">{fmtPrecise(perSec)}/s</span></span>
+        <span className="sm:text-center">Progress: <span className="text-foreground">{(progress * 100).toFixed(4)}%</span></span>
+        <span className="sm:text-right">Rate: <span className="text-foreground">{fmtPrecise(perSec)}/s</span></span>
       </div>
-      <div className="mt-1 flex justify-between text-[10px] text-muted-foreground tabular-nums">
+      <div className="mt-1 flex flex-wrap justify-between gap-x-3 text-[10px] text-muted-foreground tabular-nums">
         <span>$0</span>
         <span className="text-green-400">{fmtPrecise(earned)} earned</span>
         <span>{fmt(target)} target</span>
