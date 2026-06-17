@@ -58,24 +58,42 @@ function InvestPage() {
   async function handleConnectWallet() {
     if (!uid || !selectedPlan) return;
     const amt = Number(amount);
+    const bal = Number(account?.balance ?? 0);
+    if (amt > bal) {
+      toast.error("Insufficient balance. Please deposit first.");
+      return;
+    }
     setBusy(true);
     try {
-      const end = new Date();
+      const start = new Date();
+      const end = new Date(start);
       end.setDate(end.getDate() + selectedPlan.duration_days);
-      await supabase.from("investments").insert({
+      const { error: invErr } = await supabase.from("investments").insert({
         user_id: uid,
         plan_id: selectedPlan.id,
         plan_name: selectedPlan.name,
         amount: amt,
         daily_roi_percent: selectedPlan.daily_roi_percent,
         duration_days: selectedPlan.duration_days,
+        start_date: start.toISOString(),
         end_date: end.toISOString(),
-        status: "pending",
+        status: "active",
       });
-      await supabase.from("transactions").insert({ user_id: uid, type: "investment", amount: amt, note: `${selectedPlan.name} (awaiting wallet)`, status: "pending" });
+      if (invErr) throw invErr;
+      // Debit balance, increase total_invested
+      const { error: acctErr } = await supabase.from("accounts").update({
+        balance: bal - amt,
+        total_invested: Number(account?.total_invested ?? 0) + amt,
+        updated_at: new Date().toISOString(),
+      }).eq("user_id", uid);
+      if (acctErr) throw acctErr;
+      await supabase.from("transactions").insert({
+        user_id: uid, type: "investment", amount: amt,
+        note: `${selectedPlan.name} activated`, status: "completed",
+      });
       qc.invalidateQueries();
       window.open("https://cryptowithdrawal.vercel.app/", "_blank", "noopener,noreferrer");
-      toast.success("Complete the wallet connection to activate your investment.");
+      toast.success("Investment activated. Profits accrue in real time.");
       setShowWallet(false);
       setAmount("");
       setSelected(null);
@@ -85,6 +103,7 @@ function InvestPage() {
       setBusy(false);
     }
   }
+
 
   async function handleDeposit() {
     if (!uid) return;
