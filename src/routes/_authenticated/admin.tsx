@@ -29,12 +29,12 @@ function AdminPage() {
         <p className="text-sm text-muted-foreground">Manage users, balances, ROI rates, investments, and withdrawals.</p>
       </header>
 
-      <div className="flex gap-2 border-b border-border">
+      <div className="-mx-3 flex gap-2 overflow-x-auto border-b border-border px-3 sm:mx-0 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {(["users", "plans", "investments", "withdrawals"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`-mb-px border-b-2 px-3 py-2 text-sm capitalize ${
+            className={`-mb-px shrink-0 whitespace-nowrap border-b-2 px-3 py-2 text-sm capitalize ${
               tab === t ? "border-primary text-primary" : "border-transparent text-muted-foreground"
             }`}
           >

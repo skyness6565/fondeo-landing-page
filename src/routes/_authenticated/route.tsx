@@ -50,27 +50,28 @@ function DashboardLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
-          <Link to="/" className="flex items-center gap-2">
-            <span className="grid h-7 w-7 place-items-center rounded-lg bg-primary text-primary-foreground">
+    <div className="min-h-screen bg-background text-foreground pb-[env(safe-area-inset-bottom)]">
+      <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-xl pt-[env(safe-area-inset-top)]">
+        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-3 px-3 sm:px-4">
+          <Link to="/" className="flex min-w-0 items-center gap-2">
+            <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-primary text-primary-foreground">
               <TrendingUp className="h-3.5 w-3.5" />
             </span>
-            <span className="font-display font-bold">Fondeo</span>
+            <span className="truncate font-display font-bold">Fondeo</span>
           </Link>
-          <div className="flex items-center gap-3">
-            <span className="hidden text-xs text-muted-foreground md:inline">{user?.email}</span>
+          <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+            <span className="hidden max-w-[180px] truncate text-xs text-muted-foreground md:inline">{user?.email}</span>
             <button
               onClick={handleSignOut}
-              className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs hover:bg-muted"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 text-xs hover:bg-muted"
             >
-              <LogOut className="h-3.5 w-3.5" /> Sign out
+              <LogOut className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Sign out</span>
             </button>
           </div>
         </div>
       </header>
-      <div className="mx-auto flex max-w-7xl gap-6 px-4 py-6">
+      <div className="mx-auto flex max-w-7xl gap-6 px-3 py-4 sm:px-4 sm:py-6">
         <aside className="hidden w-56 shrink-0 lg:block">
           <nav className="sticky top-20 space-y-1">
             {NAV.map((n) => {
@@ -89,14 +90,14 @@ function DashboardLayout() {
           </nav>
         </aside>
         <main className="min-w-0 flex-1">
-          <nav className="mb-4 flex gap-1 overflow-x-auto lg:hidden">
+          <nav className="mb-4 -mx-3 flex gap-1 overflow-x-auto px-3 pb-1 lg:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {NAV.map((n) => {
               const active = pathname === n.to;
               return (
                 <Link
                   key={n.to}
                   to={n.to}
-                  className={`flex items-center gap-1.5 whitespace-nowrap rounded-md px-3 py-1.5 text-xs ${active ? "bg-primary text-primary-foreground" : "border border-border text-muted-foreground"}`}
+                  className={`flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md px-3 py-2 text-xs ${active ? "bg-primary text-primary-foreground" : "border border-border text-muted-foreground"}`}
                 >
                   <n.icon className="h-3.5 w-3.5" />
                   {n.label}

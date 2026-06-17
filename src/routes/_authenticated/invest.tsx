@@ -122,15 +122,15 @@ function InvestPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="font-display text-2xl font-bold">Investment Plans</h1>
-          <p className="text-sm text-muted-foreground">Pick a plan and start earning daily ROI.</p>
+    <div className="space-y-5 sm:space-y-6">
+      <header className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="font-display text-xl font-bold sm:text-2xl">Investment Plans</h1>
+          <p className="text-xs text-muted-foreground sm:text-sm">Pick a plan and start earning daily ROI.</p>
         </div>
-        <div className="rounded-lg border border-border bg-card px-4 py-2 text-sm">
-          Balance: <span className="font-semibold">{fmt(Number(account?.balance ?? 0))}</span>
-          <button onClick={() => setDepositOpen((o) => !o)} className="ml-3 rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm sm:justify-start sm:px-4">
+          <span>Balance: <span className="font-semibold tabular-nums">{fmt(Number(account?.balance ?? 0))}</span></span>
+          <button onClick={() => setDepositOpen((o) => !o)} className="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
             {depositOpen ? "Hide" : "Deposit"}
           </button>
         </div>

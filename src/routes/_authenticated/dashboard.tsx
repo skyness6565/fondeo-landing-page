@@ -80,30 +80,30 @@ function DashboardPage() {
 
 
   return (
-    <div className="space-y-6">
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="font-display text-2xl font-bold tracking-tight">Welcome back</h1>
-          <p className="text-sm text-muted-foreground">{user?.email}</p>
+    <div className="space-y-5 sm:space-y-6">
+      <header className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="font-display text-xl font-bold tracking-tight sm:text-2xl">Welcome back</h1>
+          <p className="truncate text-xs text-muted-foreground sm:text-sm">{user?.email}</p>
         </div>
-        <div className="flex gap-2">
-          <Link to="/invest" className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)]">
+        <div className="flex flex-wrap gap-2">
+          <Link to="/invest" className="flex-1 rounded-md bg-primary px-4 py-2 text-center text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] sm:flex-none">
             New Investment
           </Link>
-          <Link to="/withdraw" className="rounded-md border border-border px-4 py-2 text-sm font-semibold hover:bg-muted">
+          <Link to="/withdraw" className="flex-1 rounded-md border border-border px-4 py-2 text-center text-sm font-semibold hover:bg-muted sm:flex-none">
             Withdraw
           </Link>
         </div>
       </header>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 grid-cols-2 sm:gap-4 lg:grid-cols-4">
         {stats.map((s) => (
-          <div key={s.label} className="rounded-xl border border-border bg-card p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs uppercase tracking-wider text-muted-foreground">{s.label}</span>
-              <s.icon className={`h-4 w-4 ${s.color}`} />
+          <div key={s.label} className="rounded-xl border border-border bg-card p-4 sm:p-5">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[10px] uppercase tracking-wider text-muted-foreground sm:text-xs">{s.label}</span>
+              <s.icon className={`h-4 w-4 shrink-0 ${s.color}`} />
             </div>
-            <div className="mt-3 font-display text-2xl font-bold">{s.value}</div>
+            <div className="mt-2 break-words font-display text-base font-bold tabular-nums sm:mt-3 sm:text-xl lg:text-2xl">{s.value}</div>
           </div>
         ))}
       </div>
@@ -251,12 +251,12 @@ function InvestmentRow({ inv, now }: { inv: Investment; now: number }) {
           style={{ width: `${(progress * 100).toFixed(4)}%` }}
         />
       </div>
-      <div className="mt-1.5 grid grid-cols-3 gap-2 text-[10px] text-muted-foreground tabular-nums">
+      <div className="mt-1.5 grid grid-cols-1 gap-1 text-[10px] text-muted-foreground tabular-nums sm:grid-cols-3 sm:gap-2">
         <span>Elapsed: <span className="text-foreground">{elapsedDays}d {hh}:{mm}:{ss}</span> / {days}d</span>
-        <span className="text-center">Progress: <span className="text-foreground">{(progress * 100).toFixed(4)}%</span></span>
-        <span className="text-right">Rate: <span className="text-foreground">{fmtPrecise(perSec)}/s</span></span>
+        <span className="sm:text-center">Progress: <span className="text-foreground">{(progress * 100).toFixed(4)}%</span></span>
+        <span className="sm:text-right">Rate: <span className="text-foreground">{fmtPrecise(perSec)}/s</span></span>
       </div>
-      <div className="mt-1 flex justify-between text-[10px] text-muted-foreground tabular-nums">
+      <div className="mt-1 flex flex-wrap justify-between gap-x-3 text-[10px] text-muted-foreground tabular-nums">
         <span>$0</span>
         <span className="text-green-400">{fmtPrecise(earned)} earned</span>
         <span>{fmt(target)} target</span>

@@ -50,12 +50,12 @@ function Home() {
     <PageShell>
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border/60" style={{ background: "var(--gradient-hero)" }}>
-        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-20 md:grid-cols-2 md:py-28 md:items-center">
+        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:gap-10 sm:py-20 md:grid-cols-2 md:py-28 md:items-center">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
               <Zap className="h-3 w-3" /> Funded trading evaluations
             </span>
-            <h1 className="mt-5 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
+            <h1 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl md:text-6xl">
               Trade Without <span className="text-primary">Large Personal Capital</span>
             </h1>
             <p className="mt-6 max-w-xl text-base text-muted-foreground md:text-lg">
@@ -129,7 +129,7 @@ function Home() {
       </section>
 
       {/* Why Choose Us */}
-      <section className="mx-auto max-w-7xl px-4 py-20">
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:py-16 md:py-20">
         <div className="text-center">
           <h2 className="font-display text-3xl font-bold md:text-4xl">Why Choose Us</h2>
           <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
@@ -158,7 +158,7 @@ function Home() {
       </section>
 
       {/* Funding Opportunities */}
-      <section className="border-y border-border/60 bg-card/20 py-20">
+      <section className="border-y border-border/60 bg-card/20 py-12 sm:py-16 md:py-20">
         <div className="mx-auto max-w-7xl px-4">
           <div className="text-center">
             <h2 className="font-display text-3xl font-bold md:text-4xl">Funding Opportunities</h2>
@@ -186,7 +186,7 @@ function Home() {
       </section>
 
       {/* Profit Sharing */}
-      <section className="mx-auto max-w-7xl px-4 py-20">
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:py-16 md:py-20">
         <div className="grid gap-10 md:grid-cols-2 md:items-center">
           <div>
             <h2 className="font-display text-3xl font-bold md:text-4xl">Profit Sharing Model</h2>
@@ -228,7 +228,7 @@ function Home() {
       </section>
 
       {/* Statistics */}
-      <section className="border-y border-border/60 bg-card/30 py-16">
+      <section className="border-y border-border/60 bg-card/30 py-12 sm:py-16">
         <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 md:grid-cols-4">
           {[
             { n: 28500, s: "+", l: "Traders funded" },
@@ -247,7 +247,7 @@ function Home() {
       </section>
 
       {/* Success Stories */}
-      <section className="mx-auto max-w-7xl px-4 py-20">
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:py-16 md:py-20">
         <div className="text-center">
           <h2 className="font-display text-3xl font-bold md:text-4xl">Success Stories</h2>
           <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
@@ -283,7 +283,7 @@ function Home() {
       </section>
 
       {/* Testimonials */}
-      <section className="border-y border-border/60 bg-card/20 py-20">
+      <section className="border-y border-border/60 bg-card/20 py-12 sm:py-16 md:py-20">
         <div className="mx-auto max-w-7xl px-4">
           <div className="text-center">
             <h2 className="font-display text-3xl font-bold md:text-4xl">What Traders Say</h2>
@@ -321,7 +321,7 @@ function Home() {
       </section>
 
       {/* Contact Support */}
-      <section className="mx-auto max-w-5xl px-4 py-20">
+      <section className="mx-auto max-w-5xl px-4 py-12 sm:py-16 md:py-20">
         <div className="rounded-2xl border border-border/60 bg-card/40 p-8 md:p-12">
           <div className="grid gap-8 md:grid-cols-2 md:items-center">
             <div>
