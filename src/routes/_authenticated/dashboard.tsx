@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState, useMemo } from "react";
 import { Wallet, TrendingUp, ArrowDownToLine, Activity, ArrowUpRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -10,6 +11,8 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 });
 
 const fmt = (n: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(n || 0);
+const fmtPrecise = (n: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 6, maximumFractionDigits: 6 }).format(n || 0);
+
 
 function DashboardPage() {
   const { user } = useAuth();
@@ -42,12 +45,39 @@ function DashboardPage() {
     },
   });
 
+  // Live tick for real-time accruals
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  // Compute accrued (unrealized) profit from active investments, second-by-second
+  const liveAccrued = useMemo(() => {
+    if (!investments) return 0;
+    return investments.reduce((sum, inv) => {
+      if (inv.status !== "active") return sum;
+      const amt = Number(inv.amount);
+      const roi = Number(inv.daily_roi_percent);
+      const days = Number(inv.duration_days);
+      const target = (amt * roi * days) / 100;
+      const totalSec = days * 86400;
+      const elapsedSec = Math.max(0, (now - new Date(inv.created_at).getTime()) / 1000);
+      const earned = Math.min(target, (target * elapsedSec) / totalSec);
+      return sum + earned;
+    }, 0);
+  }, [investments, now]);
+
+  const liveBalance = Number(account?.balance ?? 0) + liveAccrued;
+  const liveRoi = Number(account?.total_roi ?? 0) + liveAccrued;
+
   const stats = [
-    { label: "Available Balance", value: fmt(Number(account?.balance ?? 0)), icon: Wallet, color: "text-primary" },
+    { label: "Available Balance", value: fmtPrecise(liveBalance), icon: Wallet, color: "text-primary" },
     { label: "Total Invested", value: fmt(Number(account?.total_invested ?? 0)), icon: TrendingUp, color: "text-blue-400" },
-    { label: "Total ROI Earned", value: fmt(Number(account?.total_roi ?? 0)), icon: Activity, color: "text-green-400" },
+    { label: "Total ROI Earned", value: fmtPrecise(liveRoi), icon: Activity, color: "text-green-400" },
     { label: "Total Withdrawn", value: fmt(Number(account?.total_withdrawn ?? 0)), icon: ArrowDownToLine, color: "text-orange-400" },
   ];
+
 
   return (
     <div className="space-y-6">
@@ -91,11 +121,17 @@ function DashboardPage() {
               const amt = Number(inv.amount);
               const roi = Number(inv.daily_roi_percent);
               const days = Number(inv.duration_days);
-              const target = amt * roi * days / 100;
+              const target = (amt * roi * days) / 100;
               const startMs = new Date(inv.created_at).getTime();
-              const elapsedDays = Math.max(0, (Date.now() - startMs) / 86400000);
-              const progress = inv.status === "completed" ? 1 : Math.min(1, elapsedDays / Math.max(days, 1));
+              const totalSec = days * 86400;
+              const elapsedSec = Math.max(0, (now - startMs) / 1000);
+              const progress = inv.status === "completed" ? 1 : Math.min(1, elapsedSec / Math.max(totalSec, 1));
               const earned = target * progress;
+              const perSec = target / Math.max(totalSec, 1);
+              const elapsedDays = Math.floor(elapsedSec / 86400);
+              const hh = String(Math.floor((elapsedSec % 86400) / 3600)).padStart(2, "0");
+              const mm = String(Math.floor((elapsedSec % 3600) / 60)).padStart(2, "0");
+              const ss = String(Math.floor(elapsedSec % 60)).padStart(2, "0");
               return (
                 <div key={inv.id} className="rounded-lg border border-border/60 p-3 text-sm">
                   <div className="flex items-center justify-between">
@@ -104,24 +140,30 @@ function DashboardPage() {
                       <div className="text-xs text-muted-foreground">{roi}% daily · {days}d · {fmt(amt)}</div>
                     </div>
                     <div className="text-right">
-                      <div className="font-semibold text-green-400">{fmt(earned)}</div>
+                      <div className="font-semibold text-green-400 tabular-nums">{fmtPrecise(earned)}</div>
                       <div className="text-xs text-muted-foreground">of {fmt(target)}</div>
                     </div>
                   </div>
                   <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-muted">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-primary to-green-400 transition-all duration-700"
-                      style={{ width: `${(progress * 100).toFixed(2)}%` }}
+                      className="h-full rounded-full bg-gradient-to-r from-primary to-green-400 transition-all duration-1000 ease-linear"
+                      style={{ width: `${(progress * 100).toFixed(4)}%` }}
                     />
                   </div>
-                  <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
+                  <div className="mt-1.5 grid grid-cols-3 gap-2 text-[10px] text-muted-foreground tabular-nums">
+                    <span>Elapsed: <span className="text-foreground">{elapsedDays}d {hh}:{mm}:{ss}</span> / {days}d</span>
+                    <span className="text-center">Progress: <span className="text-foreground">{(progress * 100).toFixed(4)}%</span></span>
+                    <span className="text-right">Rate: <span className="text-foreground">{fmtPrecise(perSec)}/s</span></span>
+                  </div>
+                  <div className="mt-1 flex justify-between text-[10px] text-muted-foreground tabular-nums">
                     <span>$0</span>
-                    <span>{(progress * 100).toFixed(1)}% · day {Math.min(days, Math.floor(elapsedDays))}/{days}</span>
-                    <span>{fmt(target)}</span>
+                    <span className="text-green-400">{fmtPrecise(earned)} earned</span>
+                    <span>{fmt(target)} target</span>
                   </div>
                 </div>
               );
             })}
+
           </div>
 
         </section>
