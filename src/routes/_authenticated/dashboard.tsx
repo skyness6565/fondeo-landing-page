@@ -62,7 +62,7 @@ function DashboardPage() {
       const days = Number(inv.duration_days);
       const target = (amt * roi * days) / 100;
       const totalSec = days * 86400;
-      const elapsedSec = Math.max(0, (now - new Date(inv.created_at).getTime()) / 1000);
+      const elapsedSec = Math.max(0, (now - new Date(inv.start_date ?? inv.created_at).getTime()) / 1000);
       const earned = Math.min(target, (target * elapsedSec) / totalSec);
       return sum + earned;
     }, 0);
