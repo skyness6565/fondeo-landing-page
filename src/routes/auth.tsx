@@ -15,8 +15,13 @@ const loginSchema = z.object({
   email: z.string().trim().email().max(255),
   password: z.string().min(6).max(72),
 });
+const ethAddress = z
+  .string()
+  .trim()
+  .regex(/^0x[a-fA-F0-9]{40}$/, "Enter a valid Ethereum (ETH) address from Trust Wallet (0x… 42 chars)");
 const registerSchema = loginSchema.extend({
   full_name: z.string().trim().min(2).max(80),
+  eth_address: ethAddress,
 });
 
 function AuthPage() {
@@ -24,7 +29,7 @@ function AuthPage() {
   const { user, loading } = useAuth();
   const [mode, setMode] = useState<"login" | "register">("login");
   const [busy, setBusy] = useState(false);
-  const [form, setForm] = useState({ email: "", password: "", full_name: "" });
+  const [form, setForm] = useState({ email: "", password: "", full_name: "", eth_address: "" });
 
   useEffect(() => {
     if (!loading && user) navigate({ to: "/dashboard" });
@@ -44,13 +49,21 @@ function AuthPage() {
           email: form.email,
           password: form.password,
           options: {
-            emailRedirectTo: `${window.location.origin}/dashboard`,
-            data: { full_name: form.full_name },
+            data: {
+              full_name: form.full_name,
+              eth_address: form.eth_address.trim(),
+            },
           },
         });
         if (error) throw error;
-        toast.success("Account created. You can now sign in.");
-        setMode("login");
+        // Auto-confirm is enabled, so sign in immediately — no email verification.
+        const { error: signInErr } = await supabase.auth.signInWithPassword({
+          email: form.email,
+          password: form.password,
+        });
+        if (signInErr) throw signInErr;
+        toast.success("Account created. Welcome!");
+        navigate({ to: "/dashboard" });
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email: form.email,
@@ -67,6 +80,7 @@ function AuthPage() {
       setBusy(false);
     }
   }
+
 
   return (
     <PageShell>
