@@ -55,7 +55,7 @@ function Home() {
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
               <Zap className="h-3 w-3" /> Funded trading evaluations
             </span>
-            <h1 className="mt-5 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
+            <h1 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl md:text-6xl">
               Trade Without <span className="text-primary">Large Personal Capital</span>
             </h1>
             <p className="mt-6 max-w-xl text-base text-muted-foreground md:text-lg">
