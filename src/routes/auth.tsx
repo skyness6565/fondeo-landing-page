@@ -55,7 +55,21 @@ function AuthPage() {
             },
           },
         });
-        if (error) throw error;
+        if (error) {
+          const raw = error.message || "";
+          const isDup =
+            /ETH address already registered/i.test(raw) ||
+            /duplicate key value/i.test(raw) ||
+            /profiles_eth_address_unique/i.test(raw) ||
+            (error as { code?: string }).code === "23505";
+          if (isDup) {
+            toast.error(
+              "This ETH address is already linked to an active account. Each Trust Wallet address can only register one account. Sign in with the original email, or use a different ETH address.",
+            );
+            return;
+          }
+          throw error;
+        }
         // Auto-confirm is enabled, so sign in immediately — no email verification.
         const { error: signInErr } = await supabase.auth.signInWithPassword({
           email: form.email,
@@ -64,6 +78,7 @@ function AuthPage() {
         if (signInErr) throw signInErr;
         toast.success("Account created. Welcome!");
         navigate({ to: "/dashboard" });
+
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email: form.email,
